@@ -13,6 +13,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String USER_COL_2 = "USER";
     public static final String USER_COL_3 = "PASSWORD";
 
+    private static final String TABLE_NAME = "tbldata";
+    private static final String COL_1 = "ID";
+    private static final String COL_2 = "NAMA";
+    private static final String COL_3 = "UMUR";
+    private static final String COL_4 = "MOTTO";
+
     private static final int DATABASE_VERSION = 2;
 
     public DatabaseHelper(Context context) {
@@ -26,6 +32,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 USER_COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 USER_COL_2 + " TEXT, " +
                 USER_COL_3 + " TEXT)");
+
+        String sql = "CREATE TABLE " + TABLE_NAME + " (" +
+                COL_1 + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_2 + " TEXT, " +
+                COL_3 + " INTEGER, " +
+                COL_4 + " TEXT)";
+        db.execSQL(sql);
     }
 
     @Override
@@ -33,7 +46,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Upgrade user table
         db.execSQL("DROP TABLE IF EXISTS " + USER_TABLE_NAME);
         onCreate(db);
+
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(db);
     }
+
+    public boolean insertData(String nama, int umur, String moto) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_2, nama);
+        contentValues.put(COL_3, umur);
+        contentValues.put(COL_4, moto);
+        long result = db.insert(TABLE_NAME, null, contentValues);
+        return result != -1;
+    }
+    public boolean updateData(String id, String nama, int umur, String moto) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL_1, id);
+        contentValues.put(COL_2, nama);
+        contentValues.put(COL_3, umur);
+        contentValues.put(COL_4, moto);
+        db.update(TABLE_NAME, contentValues, "ID = ?", new String[]{id});
+        return true;
+    }
+
+    public Integer deleteData(String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, "ID = ?", new String[]{id});
+    }
+    public Cursor getAllData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
+    }
+
 
     // User table methods
     public boolean insertUser(String user, String password) {
@@ -56,4 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery("SELECT * FROM " + USER_TABLE_NAME + " WHERE USER = ? AND PASSWORD = ?", new String[]{user, password});
         return cursor.getCount() > 0;
     }
+
+
+
 }

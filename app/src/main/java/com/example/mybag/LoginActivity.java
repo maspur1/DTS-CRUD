@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.get_password);
         login = findViewById(R.id.btlogin);
         regis = findViewById(R.id.signup);
+
         db = new DatabaseHelper(this);
 
         login.setOnClickListener(new View.OnClickListener() {
