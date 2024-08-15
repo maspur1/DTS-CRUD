@@ -92,4 +92,13 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/copyrightinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Copyright © Muhammad Farhan 2024"
+        android:textAlignment="center"
+        android:background="@color/blue"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
